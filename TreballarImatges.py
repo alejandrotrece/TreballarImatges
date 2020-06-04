@@ -1,6 +1,6 @@
 import os
 from PIL import Image
-from shutil import copyfile
+from shutil import copyfile, rmtree
 
 path = "images"
 llistaFitxers = os.listdir(path)
@@ -56,11 +56,42 @@ while (opcioMenu !=5):
         copyfile("images/"+image, ""+"seleccioH"+str(pixels)+"/"+image)
 
   elif (opcioMenu == 2):
-    print("Hola")
+    alçadaMiniatura = int(input("Entra l'alçada"))
+    ampladaMiniatura = int(input("Entra l'amplada"))
+    if not(os.path.exists("thumbnail")):
+      os.mkdir("thumbnail")
+    for image in llistaFitxers:
+      img = Image.open("images/"+image)
+      img.thumbnail((alçadaMiniatura, ampladaMiniatura)) 
+      img.save("thumbnail/"+image)
+
   elif (opcioMenu == 3):
-    print("Hola")
+    posicio = int(input("Ón la vols posar? 1-Amunt esquerra 2-Baix esquerra 3-Amunt dreta 4-Baix dreta."))
+    if (os.path.exists("marcaAigua")):
+      rmtree('marcaAigua')
+    os.mkdir("marcaAigua")
+    for image in llistaFitxers:
+      img = Image.open("images/"+image) 
+      img2 = Image.open("marca/"+"logo.png")
+      if posicio == 1:
+        img.paste(img2, (5, 5))
+      elif posicio == 3: 
+        img.paste(img2, (img.width-img2.width, 5))
+      elif posicio == 2:
+        img.paste(img2, (5, img.height-img2.height))
+      elif posicio == 4:
+        img.paste(img2, (img.width-img2.width, img.height-img2.height))
+      img.save("marcaAigua/"+image)
+      
   elif (opcioMenu == 4):
-    print("Hola")
+    if not(os.path.exists("jpg")):
+      os.mkdir("jpg")
+    for image in llistaFitxers:
+      if image[-3:] == "png":
+        im = Image.open(image)
+        rgb_im = im.convert('RGB')
+        rgb_im.save('colors.jpg')
+
   else:
-      opcioMenu = 5
+    opcioMenu = 5
 print("Adéu bon dia tinguis!")
